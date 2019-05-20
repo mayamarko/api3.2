@@ -9,4 +9,3 @@ async function Register(username, firstname,lastname, city, country,email,intere
 	}
 }
 
-displayLocation();

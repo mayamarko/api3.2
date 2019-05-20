@@ -8,8 +8,8 @@ app.listen(port, function () {
 });
 
 
-app.get('/select', function(req, res){
-    DButilsAzure.execQuery("SELECT * FROM tableName")
+app.get('/reg', function(req, res){
+    DButilsAzure.execQuery("INSERT INTO PoiUsers (username,poiId) VALUES ('abc',1)")
     .then(function(result){
         res.send(result)
     })
