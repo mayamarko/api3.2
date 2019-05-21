@@ -10,9 +10,18 @@ app.listen(port, function () {
 app.use(parse.urlencoded({extended:true}));
 
 
-app.get('/Register', function(req, res){
-    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, quastion,answer) VALUES ('abcd','a','b','is','israel','abc@123.co','is it','yes')")
-    DButilsAzure.execQuery("INSERT INTO Passwd (username,password) VALUES ('abcd','yes')")
+app.post('/Register', function(req, res){
+    var username=req.body.username;
+    var fname=req.body.first_name;
+    var lname=req.body.last_name;
+    var city=req.body.city;
+    var country=req.body.country;
+    var email=req.body.email;
+    var question=req.body.question;
+    var answer=req.body.answer;
+    var password=req.body.password;
+    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, question,answer) VALUES (\'"+username+"\',\'"+fname+"\',\'"+lname+"\',\'"+city+"\',\'"+country+"\',\'"+email+"\',\'"+question+"\',\'"+answer+"\')")
+    DButilsAzure.execQuery("INSERT INTO Passwd (username,password) VALUES (\'"+username+"\',\'"+password+"\')")
     .then(function(result){     
         res.send(result)
     })
@@ -23,6 +32,8 @@ app.get('/Register', function(req, res){
 })
 
 app.get('/addIntrests', function(req, res){
+    var username=req.body.username;
+    var poiId=req.body.username;
     DButilsAzure.execQuery("INSERT INTO PoiUsers (username,poiId) VALUES ('abc',1)")
     .then(function(result){
         res.send(result)
