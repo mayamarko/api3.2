@@ -31,10 +31,28 @@ app.post('/Register', function(req, res){
     })
 })
 
-app.get('/addIntrests', function(req, res){
+app.post('/AddPoi', function(req, res){
+    var poiname=req.body.poiname;
+    var rank=parseInt(req.body.rank);
+    var city=req.body.city;
+    var category=req.body.category;
+    var descr=req.body.descr;
+    var views=parseInt(req.body.views);
+    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rank,city,category,descr,views) VALUES (\'"+poiname+"\',\'"+rank+"\',\'"+city+"\',\'"+category+"\',\'"+descr+"\',\'"+views+"\')")
+    .then(function(result){     
+        res.send(result)
+    })
+    .catch(function(err){
+        console.log(err)
+        res.send(err)
+    })
+})
+
+app.post('/addUserPoi', function(req, res){
     var username=req.body.username;
-    var poiId=req.body.username;
-    DButilsAzure.execQuery("INSERT INTO PoiUsers (username,poiId) VALUES ('abc',1)")
+    var poiId=parseInt(req.body.poid);
+    var cnt=parseInt(req.body.cnt);
+    DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,cnt) VALUES (\'"+username+"\',\'"+poiId+"\',\'"+cnt+"\')")
     .then(function(result){
         res.send(result)
     })
