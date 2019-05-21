@@ -51,12 +51,12 @@ app.post('/restore', function (req, res) {
     var answer=req.body.answer;
     DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "' and question= '" + quastion + "' and answer= '" + answer + "'")
         .then(function (result) {
-            if (result != null) {
+            if (result.length==1) {
                 DButilsAzure.execQuery("SELECT password FROM Passwd where username  = '" + username + "'")
                     .then(function (result) {
-                        if (result != null) {
-                            console.log(result.query.password)
-                            res.send(result.query.password)
+                        if (result.length==1) {
+                            console.log(result[0].password)
+                            res.send(result[0].password)
                         }
                         else {
                             console.log(notExist)
@@ -76,13 +76,14 @@ app.post('/restore', function (req, res) {
 })
 
 
-app.post('/retriveConfirmationQuestion', function (req, res) {
+app.post('/retriveConfirmationQuestion', function (req, res) { //need to change to get!
     var notExist = false;
-    DButilsAzure.execQuery("SELECT question FROM Users where username  = '" + req.body.username + "'")
+    var username=req.body.username;
+    DButilsAzure.execQuery("SELECT question FROM Users where username  = '" + username + "'")
         .then(function (result) {
-            if (result != null) {
-                console.log(result.body.question)
-                res.send(result.body.question)
+            if (result.length==1) {
+                console.log(result[0].question)
+                res.send(result[0].question)
             }
             else {
                 console.log(notExist)
