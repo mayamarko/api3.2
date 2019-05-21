@@ -1,0 +1,60 @@
+USE[Assignment3db]
+GO
+
+drop Table Users;
+drop Table Interests;
+drop Table Passwd;
+drop Table Poi;
+drop Table userPoi;
+drop Table reviewPoi;
+
+
+
+Create table Users (	username varchar(50) not null primary key,
+						first_name varchar(max) not null,
+						last_name varchar(max) not null,
+						city varchar(max) not null,
+						country varchar(max) not null,
+						email varchar(max) not null,
+						question varchar(max) not null,
+						answer varchar(max) not null
+						
+);
+
+Create table Interests (username varchar(50) not null, 
+						interest varchar(50) not null ,
+						primary key(username, interest),
+						constraint fk_username foreign key (username) references Users (username)
+);
+
+Create table Passwd (	username varchar(50) not null primary key,
+						passwd varchar(50) not null, 
+						constraint fk_usernameP foreign key (username) references Users (username)
+						
+);
+
+Create table Poi (		poiId int not null IDENTITY(1,1) primary key,
+						poiname varchar(max) not null ,
+						rnk float not null,
+						city varchar(max) not null,
+						category varchar(max) not null,
+						descr varchar(max),
+						viw int not null,
+						picture varbinary(max) 
+);
+
+Create table userPoi (	username varchar(50) not null,
+						poiId int not null ,
+						addate date not null,
+						cnt int not null,
+						primary key (username, poiId),
+						constraint fk_poidU foreign key (poiId) references Poi (poiId),
+						constraint fk_userPo foreign key (username) references Users (username)
+);
+
+Create table reviewPoi (	id int not null IDENTITY(1,1) primary key,
+							poiId int not null ,
+							review varchar(max) not null,
+							wrdate date not null,
+							constraint fk_poidR foreign key (poiId) references Poi (poiId)
+);
