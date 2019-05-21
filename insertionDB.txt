@@ -1,0 +1,33 @@
+INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question,		answer) 
+VALUES			  ('ab',	'Tom B. Erichsen', 'Skagen',	'Stavanger', 'StavangerC',	'as@gh.com',	'is it',	'yep')
+
+INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question,		answer) 
+VALUES			  ('abc',	'Tom B. Erichsen', 'Skagen',	'Stavanger', 'StavangerC',	'as@gh.com',	'is it',	'yep')
+
+INSERT INTO Passwd (username,	passwd) 
+VALUES				('ab',	'123')
+
+INSERT INTO Passwd (username,	passwd) 
+VALUES				('abc',	'123')
+
+INSERT INTO Poi		(poiname,	rnk,		city,		category,	descr,				viw) 
+VALUES				('aa',		1,		'Skagen',		'cat1',		'qtwyeieioeodjfh',	3)
+
+INSERT INTO Poi		(poiname,	rnk,		city,		category,	descr,				viw) 
+VALUES				('bb',		2,		'Skagen3',		'cat3',		'qtwyeieioeodjfh',	2)
+
+INSERT INTO Poi		(poiname,	rnk,		city,		category,	descr,				viw) 
+VALUES				('cc',		2,		'Skagen4',		'cat2',		'qtwyeieioeodjfh',	4)
+
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('ab',		2			,getdate(),	3	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('ab',		3			,getdate(),	1	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('abc',		2			,getdate(),	2	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('abc',		1			,getdate(),	2	)
