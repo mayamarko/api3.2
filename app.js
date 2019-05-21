@@ -11,8 +11,9 @@ app.use(parse.urlencoded({extended:true}));
 
 
 app.get('/Register', function(req, res){
-    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, quastion,answer) VALUES ('abc','a','b','is','israel','abc@123.co','is it','yes')")
-    .then(function(result){
+    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, quastion,answer) VALUES ('abcd','a','b','is','israel','abc@123.co','is it','yes')")
+    DButilsAzure.execQuery("INSERT INTO Passwd (username,password) VALUES ('abcd','yes')")
+    .then(function(result){     
         res.send(result)
     })
     .catch(function(err){
@@ -21,8 +22,8 @@ app.get('/Register', function(req, res){
     })
 })
 
-app.get('/add1', function(req, res){
-    DButilsAzure.execQuery("INSERT INTO PoiUsers (username,poiId) VALUES (req.)")
+app.get('/addIntrests', function(req, res){
+    DButilsAzure.execQuery("INSERT INTO PoiUsers (username,poiId) VALUES ('abc',1)")
     .then(function(result){
         res.send(result)
     })
