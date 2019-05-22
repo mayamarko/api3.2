@@ -12,6 +12,40 @@ app.use(parse.json())
 app.use(parse.urlencoded({ extended: true }));
 secret="thisIsHell"
 
+app.use("/private", (req, res,next) =>{
+	const token = req.header("x-auth-token");
+	// no token
+	if (!token){
+        res.status(401).send("Access denied. No token provided.");
+    } 
+	// verify token
+	try {
+		const decoded = jwt.verify(token, secret);
+        req.decoded = decoded;
+        var username=req.decoded.name;
+        req.username=username;
+        DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(true)
+                // res.send(result)
+                next(); //move on to the actual function
+            }
+            else {
+                console.log(notExist)
+                // res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+		
+	} catch (exception) {
+		res.status(400).send("Invalid token.");
+	}
+});
+
 app.post('/Register', function (req, res) {
     var username = req.body.username;
     var fname = req.body.first_name;
@@ -52,7 +86,7 @@ app.post('/Register', function (req, res) {
 })
 
 
-app.post('/AddPoi', function (req, res) {
+app.post('/addPoi', function (req, res) { //add poi to poi table
     var poiname = req.body.poiname;
     //var rank = parseInt(req.body.rank);
     var city = req.body.city;
@@ -70,9 +104,9 @@ app.post('/AddPoi', function (req, res) {
         })
 })
 
-app.post('/addUserPoi', function (req, res) {
-    var username = req.body.username;
-    var poiId = parseInt(req.body.poid);
+app.post('/private/addUserPoi', function (req, res) { //add poi to userPoi
+    var username = req.username;
+    var poiId = parseInt(req.body.poiId);
     var cnt = parseInt(req.body.cnt);
     DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('" + username + "','" + poiId + "',getdate(),'" + cnt + "')")
         .then(function (result) {
@@ -121,7 +155,8 @@ app.post('/saveRankPoi', function(req, res){
     })
 })
 
-app.delete('/deleteUserPoi', function(req, res){
+app.delete('/private/deleteUserPoi', function(req, res){ //update delete!!
+    var username=req.username;
     var poiId=parseInt(req.body.id);
     DButilsAzure.execQuery("DELETE FROM reviewPoi WHERE id='"+poiId+"'")
     .then(function(result){
@@ -143,39 +178,7 @@ app.get('/select', function (req, res) {
             res.send(err)
         })
 })
-app.use("/private", (req, res,next) =>{
-	const token = req.header("x-auth-token");
-	// no token
-	if (!token){
-        res.status(401).send("Access denied. No token provided.");
-    } 
-	// verify token
-	try {
-		const decoded = jwt.verify(token, secret);
-        req.decoded = decoded;
-        var username=req.decoded.name;
-        req.username=username;
-        DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
-        .then(function (result) {
-            if (result.length > 0) {
-                console.log(true)
-                // res.send(result)
-                next(); //move on to the actual function
-            }
-            else {
-                console.log(notExist)
-                // res.send(notExist)
-            }
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(err)
-        })
-		
-	} catch (exception) {
-		res.status(400).send("Invalid token.");
-	}
-});
+
 app.post('/restore', function (req, res) {
     var notExist = false;
     var username = req.body.username;
