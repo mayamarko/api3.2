@@ -71,16 +71,19 @@ VALUES					(4,		'fdsssad',	getdate())
 
 
 INSERT INTO Interests	 (username,	interest) 
-VALUES					 ('ab',	'A')
+VALUES					 ('ab',	'cat1')
 
 INSERT INTO Interests	 (username,	interest) 
-VALUES					 ('abc',	'B')
+VALUES					 ('abc',	'cat3')
 
 INSERT INTO Interests	 (username,	interest) 
-VALUES					 ('ab',	'B')
+VALUES					 ('ab',	'cat2')
 
 INSERT INTO Interests	 (username,	interest) 
-VALUES					 ('abcd',	'C')
+VALUES					 ('abcd',	'cat3')
 
 INSERT INTO Interests	 (username,	interest) 
-VALUES					 ('abc',	'A')
+VALUES					 ('abc',	'cat5')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('ab',	'cat8')
