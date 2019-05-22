@@ -94,7 +94,7 @@ app.post('/addPoi', function (req, res) { //add poi to poi table
     var descr = req.body.descr;
     //ar views = parseInt(req.body.views);
     var pic=req.body.picture;
-    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + 0 + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','"+ 0 +"','"+pic+"')")
+    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + null + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','"+ 0 +"','"+pic+"')")
         .then(function (result) {
             res.send(true)
         })
@@ -158,7 +158,7 @@ app.post('/saveRankPoi', function(req, res){
 app.delete('/private/deleteUserPoi', function(req, res){ //update delete!!
     var username=req.username;
     var poiId=parseInt(req.body.id);
-    DButilsAzure.execQuery("DELETE FROM reviewPoi WHERE id='"+poiId+"'")
+    DButilsAzure.execQuery("DELETE FROM userPoi WHERE username='"+username+"' AND poiId='"+poiId+"' ")
     .then(function(result){
         res.send(true)
     })
