@@ -23,11 +23,11 @@ app.post('/Register', function(req, res){
     DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, question,answer) VALUES (\'"+username+"\',\'"+fname+"\',\'"+lname+"\',\'"+city+"\',\'"+country+"\',\'"+email+"\',\'"+question+"\',\'"+answer+"\')")
     DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES (\'"+username+"\',\'"+password+"\')")
     .then(function(result){     
-        res.send(result)
+        res.send(true)
     })
     .catch(function(err){
         console.log(err)
-        res.send(err)
+        res.send(false)
     })
 })
 
@@ -40,11 +40,11 @@ app.post('/AddPoi', function(req, res){
     var views=parseInt(req.body.views);
     DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw) VALUES (\'"+poiname+"\',\'"+rank+"\',\'"+city+"\',\'"+category+"\',\'"+descr+"\',\'"+views+"\')")
     .then(function(result){     
-        res.send(result)
+        res.send(true)
     })
     .catch(function(err){
         console.log(err)
-        res.send(err)
+        res.send(false)
     })
 })
 
@@ -54,25 +54,37 @@ app.post('/addUserPoi', function(req, res){
     var cnt=parseInt(req.body.cnt);
      DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('"+username+"','"+poiId+"',getdate(),'"+cnt+"')")
     .then(function(result){
-        res.send(result)
+        res.send(true)
     })
     .catch(function(err){
         console.log(err)
-        res.send(err)
+        res.send(false)
     })
 })
 
-//not done yet!! never checked 21/5/19 11:01
+
 app.post('/saveReviewPoi', function(req, res){
-    var username=req.body.username;
-    var poiId=parseInt(req.body.poid);
-    DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,date) VALUES ('"+username+"','"+poiId+"',getdate())")
+    var poiId=parseInt(req.body.poiId);
+    var reviews=req.body.review;
+    DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,wrdate) VALUES ('"+poiId+"','"+reviews+"',getdate())")
     .then(function(result){
-        res.send(result)
+        res.send(true)
     })
     .catch(function(err){
         console.log(err)
-        res.send(err)
+        res.send(false)
+    })
+})
+
+app.delete('/deletePoi', function(req, res){
+    var poiId=parseInt(req.body.poiId);
+    DButilsAzure.execQuery("DELETE FROM Poi WHERE poiId='"+poiId+"'")
+    .then(function(result){
+        res.send(true)
+    })
+    .catch(function(err){
+        console.log(err)
+        res.send(false)
     })
 })
 
