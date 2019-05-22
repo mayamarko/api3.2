@@ -19,28 +19,48 @@ app.post('/Register', function (req, res) {
     var city = req.body.city;
     var country = req.body.country;
     var email = req.body.email;
-    var question = req.body.question;
-    var answer = req.body.answer;
+    var question1 = req.body.question1;
+    var answer1 = req.body.answer1;
+    var question2 = req.body.question2;
+    var answer2 = req.body.answer2;
     var password = req.body.password;
-    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, question,answer) VALUES (\'" + username + "\',\'" + fname + "\',\'" + lname + "\',\'" + city + "\',\'" + country + "\',\'" + email + "\',\'" + question + "\',\'" + answer + "\')")
-    DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES (\'" + username + "\',\'" + password + "\')")
+    var interestString=req.body.interests;
+    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email,question1,answer1,question2,answer2) VALUES ('" + username + "','" + fname + "','" + lname + "','" + city + "','" + country + "','" + email + "','" + question1 + "','" + answer1 + "','" + question2 + "','" + answer2 + "')")
+    .then(function (result) {
+        DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES ('" + username + "','" + password + "')")
         .then(function (result) {
-            res.send(true)
+            var arr=interestString.split(',');
+            var i;
+            for(i=0;i<arr.length;i++){
+                DButilsAzure.execQuery("INSERT INTO Interests (username,interest) VALUES ('" + username + "','" + arr[i] + "')") 
+                .then(function (result) {
+                    res.send(true)
+                })
+                .catch(function (err) {
+                    console.log(err)            
+                })
+            }
         })
         .catch(function (err) {
-            console.log(err)
-            res.send(false)
+            console.log(err)        
         })
+    })
+    .catch(function (err) {
+        console.log(err)
+        res.send(false)
+    })     
 })
+
 
 app.post('/AddPoi', function (req, res) {
     var poiname = req.body.poiname;
-    var rank = parseInt(req.body.rank);
+    //var rank = parseInt(req.body.rank);
     var city = req.body.city;
     var category = req.body.category;
     var descr = req.body.descr;
-    var views = parseInt(req.body.views);
-    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw) VALUES (\'" + poiname + "\',\'" + rank + "\',\'" + city + "\',\'" + category + "\',\'" + descr + "\',\'" + views + "\')")
+    //ar views = parseInt(req.body.views);
+    var pic=req.body.picture;
+    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + 0 + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','"+ 0 +"','"+pic+"')")
         .then(function (result) {
             res.send(true)
         })
@@ -81,19 +101,19 @@ app.post('/saveReviewPoi', function (req, res) {
 app.post('/saveRankPoi', function(req, res){
     var poiId=parseInt(req.body.poiId);
     var rank=parseInt(req.body.rank);
-    DButilsAzure.execQuery("SELECT rnk FROM Poi WHERE poiId='"+poiId+"'")
-    .then(function(result){
-        DButilsAzure.execQuery("SELECT COUNT(*) FROM Poi")
+    DButilsAzure.execQuery("SELECT rnk,numRank FROM Poi WHERE poiId='"+poiId+"'")
+    .then(function(result){         
+        var calcRank=(result[0].rnk*result[0].numRank+rank)/(result[0].numRank+1);
+        var addedRank=result[0].numRank+1;
+        DButilsAzure.execQuery("UPDATE Poi SET rnk = '"+calcRank+"',numRank = '"+addedRank+"' WHERE poiId='"+poiId+"';")
         .then(function(result1){
-            var calcRank=(result[0].rnk*(result1-1)+rank)/result1;
-            DButilsAzure.execQuery("UPDATE Poi SET rnk = '"+calcRank+"' WHERE poiId='"+poiId+"';")
+            res.send(true)
         })
-        .catch(function(err2){
-            console.log(err2)
-            res.send(err2)
+        .catch(function(err){
+            console.log(err)
+            res.send(false)
         })
-        // DButilsAzure.execQuery("UPDATE Poi SET rnk = '"+calcRank+"' WHERE poiId='"+poiId+"';")
-        res.send(true)
+        //res.send(true)
     })
     .catch(function(err){
         console.log(err)
@@ -101,7 +121,7 @@ app.post('/saveRankPoi', function(req, res){
     })
 })
 
-app.delete('/deletePoi', function(req, res){
+app.delete('/deleteUserPoi', function(req, res){
     var poiId=parseInt(req.body.id);
     DButilsAzure.execQuery("DELETE FROM reviewPoi WHERE id='"+poiId+"'")
     .then(function(result){
