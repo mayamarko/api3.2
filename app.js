@@ -156,19 +156,19 @@ app.use("/private", (req, res,next) =>{
 		res.status(400).send("Invalid token.");
 	}
 });
-app.post('/private/restore', function (req, res) {
+app.post('/restore', function (req, res) {
     var notExist = false;
-    var username = req.username;
-    var quastion = req.body.question;
+    var username = req.body.username;
+    var question = req.body.question;
     var answer = req.body.answer;
-    DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "' and question= '" + quastion + "' and answer= '" + answer + "'")
+    DButilsAzure.execQuery("SELECT username FROM Users where (username  = '" + username + "' and question1 = '" + question + "' and answer1= '" + answer + "') or (username  = '" + username + "' and question2= '" + question + "' and answer2= '" + answer + "')")
         .then(function (result) {
-            if (result.length == 1) {
-                DButilsAzure.execQuery("SELECT password FROM Passwd where username  = '" + username + "'")
+            if (result.length > 0) {
+                DButilsAzure.execQuery("SELECT passwd FROM Passwd where username  = '" + username + "'")
                     .then(function (result) {
                         if (result.length == 1) {
-                            console.log(result[0].password)
-                            res.send(result[0].password)
+                            console.log(result[0].passwd)
+                            res.send(result[0].passwd)
                         }
                         else {
                             console.log(notExist)
@@ -179,23 +179,6 @@ app.post('/private/restore', function (req, res) {
                         console.log(err)
                         res.send(err)
                     })
-            }
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(err)
-        })
-})
-
-
-app.get('/retriveConfirmationQuestion', function (req, res) {
-    var notExist = false;
-    var username = req.query.username;
-    DButilsAzure.execQuery("SELECT question FROM Users where username  = '" + username + "'")
-        .then(function (result) {
-            if (result.length == 1) {
-                console.log(result[0].question)
-                res.send(result[0].question)
             }
             else {
                 console.log(notExist)
@@ -208,10 +191,30 @@ app.get('/retriveConfirmationQuestion', function (req, res) {
         })
 })
 
-app.get('/getRandomPoi', function (req, res) { //checkkkks
+
+app.get('/retriveConfirmationQuestion', function (req, res) {
     var notExist = false;
-    var username = req.query.username;
-    var minRank = req.query.rank;
+    var username = req.body.username;
+    DButilsAzure.execQuery("SELECT question1, question2 FROM Users where username  = '" + username + "'")
+        .then(function (result) {
+            if (result.length == 1) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/getRandomPoi', function (req, res) { 
+    var notExist = false;
+    var minRank = req.body.rank;
     var quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
     if (minRank != null) {
         quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
@@ -255,9 +258,9 @@ app.get('/getRandomPoi', function (req, res) { //checkkkks
         })
 })
 
-app.get('/getSavedPOI', function (req, res) { //return last 2 saved by user else returns false
+app.get('/private/getSavedPOI', function (req, res) { //return last 2 saved by user else returns false
     var notExist = false;
-    var username = req.query.username;
+    var username = req.username;
     DButilsAzure.execQuery("SELECT TOP 2 Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt, addate FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "' order by addate DESC")
         .then(function (result) {
             if (result.length > 0) {
@@ -275,9 +278,9 @@ app.get('/getSavedPOI', function (req, res) { //return last 2 saved by user else
         })
 })
 
-app.get('/getAllPOIBu', function (req, res) { //return all poi by user (orderd by his choice)
+app.get('/private/getAllPOIBu', function (req, res) { //return all poi by user (orderd by his choice)
     var notExist = false;
-    var username = req.query.username;
+    var username = req.username;
     DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "'order by cnt DESC")
         .then(function (result) {
             if (result.length > 0) {
@@ -316,7 +319,7 @@ app.get('/getAllPOI', function (req, res) { //return all poi in the db
 
 app.get('/getAllPOIBN', function (req, res) { //return poi by name
     var notExist = false;
-    var name = req.query.name;
+    var name = req.body.name;
     DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi WHERE poiname  = '" + name + "'")
         .then(function (result) {
             if (result.length > 0) {
@@ -334,9 +337,9 @@ app.get('/getAllPOIBN', function (req, res) { //return poi by name
         })
 })
 
-app.get('/getInterests', function (req, res) {
+app.get('/private/getInterests', function (req, res) {
     var notExist = false;
-    var username = req.query.username;
+    var username = req.username;
     DButilsAzure.execQuery("SELECT interest FROM Interests where username  = '" + username + "'")
         .then(function (result) {
             if (result.length > 0) {
@@ -356,7 +359,7 @@ app.get('/getInterests', function (req, res) {
 
 app.get('/getReviewPOI', function (req, res) { //return 2 most recent reviews of specific poi
     var notExist = false;
-    var poiId = req.query.poiId;
+    var poiId = req.body.poiId;
     DButilsAzure.execQuery("SELECT TOP 2 review FROM reviewPoi where poiId  = '" + poiId + "' order by wrdate DESC")
         .then(function (result) {
             if (result.length > 0) {
@@ -376,14 +379,64 @@ app.get('/getReviewPOI', function (req, res) { //return 2 most recent reviews of
 
 
 
-app.post("/login", (req, res) => {
-    var username=req.body.username;
-    var password=req.body.password;
-    payload = { name: username, password: password };
-	options = { expiresIn: "1d" };
-	const token = jwt.sign(payload, secret, options);
-	res.send(token);
+app.post("/login", (req, res) => { //need to do validation in the db
+    var notExist = false;
+    var username = req.body.username;
+    var password = req.body.password;
+    DButilsAzure.execQuery("SELECT Users.username FROM Users Join Passwd on Users.username=Passwd.username where Users.username  = '" + username + "' and passwd= '" + password + "'")
+        .then(function (result) {
+            if (result.length > 0) {
+                payload = { name: username, password: password };
+                options = { expiresIn: "1d" };
+                const token = jwt.sign(payload, secret, options);
+                res.send(token);
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+
 });
+
+app.get('/private/getPOIbyInterests', function (req, res) {
+    var notExist = false;
+    var username = req.username;
+    DButilsAzure.execQuery("SELECT poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where category in (select interest from Interests where username  = '" + username + "') order by rnk DESC")
+        .then(function (result) {
+            if (result.length > 0) {
+                var len = result.length;
+                var first = result[0];
+                if (len > 1) {
+                    for (var i = 1; i < len; i++) {
+                        var second = result[i];
+                        if (second.category != first.category) {
+                            console.log(first,second)
+                            var ret=[first,second];
+                            res.send(ret)
+                            break;
+                        }
+                    }
+                }else{
+                    console.log(first)
+                    res.send(first)
+                }
+               
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
 
 
 
