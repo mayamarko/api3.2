@@ -7,6 +7,7 @@ var port = 3000;
 app.listen(port, function () {
     console.log('Example app listening on port ' + port);
 });
+app.use(parse.json())
 app.use(parse.urlencoded({ extended: true }));
 
 
@@ -76,15 +77,38 @@ app.post('/saveReviewPoi', function(req, res){
     })
 })
 
-app.delete('/deletePoi', function(req, res){
+app.post('/saveRankPoi', function(req, res){
     var poiId=parseInt(req.body.poiId);
-    DButilsAzure.execQuery("DELETE FROM Poi WHERE poiId='"+poiId+"'")
+    var rank=parseInt(req.body.rank);
+    DButilsAzure.execQuery("SELECT rnk FROM Poi WHERE poiId='"+poiId+"'")
     .then(function(result){
+        DButilsAzure.execQuery("SELECT COUNT(*) FROM Poi")
+        .then(function(result1){
+            var calcRank=(result[0].rnk*(result1-1)+rank)/result1;
+            DButilsAzure.execQuery("UPDATE Poi SET rnk = '"+calcRank+"' WHERE poiId='"+poiId+"';")
+        })
+        .catch(function(err2){
+            console.log(err2)
+            res.send(err2)
+        })
+        // DButilsAzure.execQuery("UPDATE Poi SET rnk = '"+calcRank+"' WHERE poiId='"+poiId+"';")
         res.send(true)
     })
     .catch(function(err){
         console.log(err)
         res.send(false)
+    })
+})
+
+app.delete('/deletePoi', function(req, res){
+    var poiId=parseInt(req.body.id);
+    DButilsAzure.execQuery("DELETE FROM reviewPoi WHERE id='"+poiId+"'")
+    .then(function(result){
+        res.send(true)
+    })
+    .catch(function(err){
+        console.log(err)
+        res.send(err)
     })
 })
 
