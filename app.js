@@ -3,6 +3,9 @@ var app = express();
 var DButilsAzure = require('./DButils');
 var parse = require("body-parser");
 var jwt = require("jsonwebtoken");
+var validator = require('./validator');
+
+// console.log(validator.isEmail("sdsad@dds.sds"));
 
 var port = 3000;
 app.listen(port, function () {
