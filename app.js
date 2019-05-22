@@ -151,10 +151,15 @@ app.get('/retriveConfirmationQuestion', function (req, res) {
         })
 })
 
-app.get('/getRandomPoi', function (req, res) {
+app.get('/getRandomPoi', function (req, res) { //checkkkks
     var notExist = false;
     var username = req.query.username;
-    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "'")
+    var minRank=req.query.rank;
+    var quer="SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
+    if(minRank!=null){
+        quer="SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
+    }
+    DButilsAzure.execQuery(quer)
         .then(function (result) {
             var len = result.length;
             var rand = Math.floor(Math.random() * (len));
@@ -193,10 +198,10 @@ app.get('/getRandomPoi', function (req, res) {
         })
 })
 
-app.get('/getSavedPOI', function (req, res) { //return last 2 saved
+app.get('/getSavedPOI', function (req, res) { //return last 2 saved by user
     var notExist = false;
-    var username = req.query.username;
-    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, addate FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "'")
+    var username = req.query.username; 
+    DButilsAzure.execQuery("SELECT TOP 2 Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt, addate FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "' order by addate DESC")
         .then(function (result) {
             if (result.length > 0) {
                 console.log(result)
@@ -213,10 +218,29 @@ app.get('/getSavedPOI', function (req, res) { //return last 2 saved
         })
 })
 
-app.get('/getAllPOI', function (req, res) { //return all poi
+app.get('/getAllPOIBu', function (req, res) { //return all poi by user (orderd by his choice)
     var notExist = false;
     var username = req.query.username;
-    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "'")
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "'order by cnt DESC")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/getAllPOI', function (req, res) { //return all poi in the db
+    var notExist = false;
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi")
         .then(function (result) {
             if (result.length > 0) {
                 console.log(result)
