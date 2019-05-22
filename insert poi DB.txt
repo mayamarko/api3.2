@@ -16,19 +16,19 @@ VALUES				('Amsterdam City Archives',		4,		'Amsterdam',		'Museum',		'Architectur
 
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Waggamama',					1,		'Amsterdam',		'Eatings','Japanese, Asian, Vegetarian Friendly, Vegan Options',	3,			1	)
+VALUES				('Waggamama',					1,		'Amsterdam',	'Eatings','Japanese, Asian, Vegetarian Friendly, Vegan Options',	3,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										 viw,		numRank) 
-VALUES				('Sumo',						2,		'Amsterdam',		'Eatings',	'Sushi and Grill Restaurant',						   2,			1	)
+VALUES				('Sumo',						2,		'Amsterdam',	'Eatings',	'Sushi and Grill Restaurant',						   2,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Vapiano',						5,		'Amsterdam',		'Eatings',		'Italian Resturant',							    4,			3	)
+VALUES				('Vapiano',						5,		'Amsterdam',	'Eatings',		'Italian Resturant',							    4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('cafe De klos',				3,		'Amsterdam',		'Eatings',	'American Steakhouse, Dutch, Bar, Barbecue',			4,			3	)
+VALUES				('cafe De klos',				3,		'Amsterdam',	'Eatings',	'American Steakhouse, Dutch, Bar, Barbecue',			4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',		'Eatings',		'Quick bites - sels only fires with sauces',			4,			3	)
+VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',	'Eatings',		'Quick bites - sels only fires with sauces',			4,			3	)
 
 
 

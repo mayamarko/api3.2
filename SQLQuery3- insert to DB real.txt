@@ -1,0 +1,73 @@
+INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question1,		answer1 ,	question2,	answer2) 
+VALUES			  ('mam',	    'Ma',		    'Mark',		    'Carmi',	'Israel',	'maya@gh.com',	'is it 1',	    'yep1',		'is it it 1',	'yepyep1'  )
+
+INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question1,		answer1,	question2,	answer2) 
+VALUES			  ('noft',	    'Nof',		    'Turtel',	'Hod- Ha',	 'Israel',	'nof@gh.com',	'is it 2',	'yep2',			'is it it 2',	'yepyep2')
+
+INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question1,		answer1 ,	question2,	answer2) 
+VALUES			  ('adj',	    'Ad',		    'Jac',	    'Natanya',      'Israel',	'ati@gh.com',	'is it 3',	'yep3',			'is it it 3',	'yepyep3')
+
+
+
+INSERT INTO Passwd (username,	passwd) 
+VALUES				('mam',	'123')
+
+INSERT INTO Passwd (username,	passwd) 
+VALUES				('nof',	'1234')
+
+INSERT INTO Passwd (username,	passwd) 
+VALUES				('adj',	'12345')
+
+
+
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('mam',		2			,getdate(),	3	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('nof',		3			,getdate(),	1	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('adj',		2			,getdate(),	2	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('mam',		1			,getdate(),	2	)
+
+INSERT INTO userPoi (username,	poiId,		addate,		cnt) 
+VALUES				('nof',		1			,getdate(),	2	)
+
+
+INSERT INTO reviewPoi	(poiId,	 review, 	wrdate	 ) 
+VALUES					(1,		'It was good',	getdate())
+
+INSERT INTO reviewPoi	(poiId,	 review, 	wrdate	 ) 
+VALUES					(2,		'Didn't like it',	getdate())
+
+INSERT INTO reviewPoi	(poiId,	 review, 	wrdate	 ) 
+VALUES					(1,		'fine',	getdate())
+
+INSERT INTO reviewPoi	(poiId,	 review, 	wrdate	 ) 
+VALUES					(2,		'Perfect',	getdate())
+
+INSERT INTO reviewPoi	(poiId,	 review, 	wrdate	 ) 
+VALUES					(4,		'Cool',	getdate())
+
+
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('mam',	'Museum')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('adj',	'Eatings')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('nof',	'Tours')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('mam',	'Nature and Parks')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('nof',	'Nature and Parks')
+
+INSERT INTO Interests	 (username,	interest) 
+VALUES					 ('adj',	'Tours')
