@@ -1,19 +1,18 @@
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('Rijksmuseum',					1,		'Amsterdam',		'Museum',		'qtwyeieioeodjfh',			3,			1	)
+VALUES				('Rijksmuseum',					1,		'Amsterdam',		'Museum',		'Art Museum',			3,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('Van Gogh Museum',				2,		'Amsterdam',		'Museum',		'qtwyeieioeodjfh',			2,			1	)
+VALUES				('Van Gogh Museum',				2,		'Amsterdam',		'Museum',		'Art Museum',			2,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('Anne Frank House',			5,		'Amsterdam',		'Museum',		'qtwyeieioeodjfh',			4,			3	)
+VALUES				('Anne Frank House',			5,		'Amsterdam',		'Museum',		'History Museum',		4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('Amsterdam Cheese Museum',		3,		'Amsterdam',		'Museum',		'qtwyeieioeodjfh',			4,			3	)
+VALUES				('Amsterdam Cheese Museum',		3,		'Amsterdam',		'Museum',		'Food Museum',			4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('Amsterdam City Archives',		4,		'Amsterdam',		'Museum',		'qtwyeieioeodjfh',			4,			3	)
-
+VALUES				('Amsterdam City Archives',		4,		'Amsterdam',		'Museum',		'Architecture Museum',	4,			3	)
 
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
@@ -29,20 +28,37 @@ INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,
 VALUES				('cafe De klos',				3,		'Amsterdam',		'Eatings',	'American Steakhouse, Dutch, Bar, Barbecue',			4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',		'Eatings',		'quick bites sels only fires with sauces',			4,			3	)
+VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',		'Eatings',		'Quick bites - sels only fires with sauces',			4,			3	)
+
 
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Amsterdam Canal Cruises',		1,		'Amsterdam',	'Attractions','Japanese, Asian, Vegetarian Friendly, Vegan Options',	3,			1	)
+VALUES				('Amsterdam Canal Cruises',		1,		'Amsterdam',	'Tours',    'Boat tour in Amsterdam's Canals',	                    3,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										 viw,		numRank) 
-VALUES				('Free Walking Tours Amsterdam',2,		'Amsterdam',	'Attractions',	'Sushi and Grill Restaurant',						   2,			1	)
+VALUES				('Free Walking Tours Amsterdam',2,		'Amsterdam',	'Tours',    'Get to know Amsterdam better by walking throuh the Streets and Neighberhoods',2,1)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Heineken Experience',			5,		'Amsterdam',	'Attractions',		'Italian Resturant',							    4,			3	)
+VALUES				('Heineken Experience',			5,		'Amsterdam',	'Tours',		'Tour in Netherland's signeture brewery',		    4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Amsterdam Light Festival',				3,		'Amsterdam',	'Attractions',	'American Steakhouse, Dutch, Bar, Barbecue',			4,			3	)
+VALUES				('Amsterdam Light Festival',	3,		'Amsterdam',	'Tours',	'Light Festival in the Streets and Canals of Amsterdam',4,			3	)
 
-INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				viw,		numRank) 
-VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',	'Attractions',		'quick bites sels only fires with sauces',			4,			3	)
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				                    viw,		numRank) 
+VALUES				('Red Light District',	        2,	    'Amsterdam',	'Tours','Explore Amsterdam's famous Red Light District',           4,			3	)
+
+
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,									 viw,		numRank) 
+VALUES				('Vondelpark',		            1,		'Amsterdam',	'Nature and Parks','Amsterdam's most famous park , built in 1850',	3,  	1	)
+
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,								     viw,		numRank) 
+VALUES				('Keukenhof Gardens',           2,		'Amsterdam',	'Nature and Parks','wonderful tulip gardens',                       2,          1)
+
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,									  viw,		numRank) 
+VALUES				('Amsterdamse Bos',			    5,		'Amsterdam',	'Nature and Parks',	'One of the largest city parks in Europe',		4,			3	)
+
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,									  viw,		numRank) 
+VALUES				('ARTIS Amsterdam Royal Zoo',	3,	'Amsterdam',	'Nature and Parks',	'Experience nature right in the city centre',        4,		3)
+
+INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,				                        viw,		numRank) 
+VALUES				('Herengracht',	                4,	'Amsterdam',	    'Nature and Parks',	'Perfect view of canals and streets nature',	4,			3	)
