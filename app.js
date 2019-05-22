@@ -461,5 +461,25 @@ app.get('/private/getPOIbyInterests', function (req, res) {
         })
 })
 
+app.post('/editViews', function(req, res){
+    var poiId=parseInt(req.body.poiId);
+    DButilsAzure.execQuery("SELECT poiId,viw FROM Poi WHERE poiId='"+poiId+"'")
+    .then(function(result){         
+        var addView=result[0].viw+1;
+        DButilsAzure.execQuery("UPDATE Poi SET viw = '"+addView+"' WHERE poiId='"+poiId+"';")
+        .then(function(result){
+            res.send(true)
+        })
+        .catch(function(err){
+            console.log(err)
+            res.send(false)
+        }) 
+    })
+    .catch(function(err){
+        console.log(err)
+        res.send(false)
+    })
+})
+
 
 
