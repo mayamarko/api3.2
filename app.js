@@ -2,90 +2,91 @@ var express = require('express');
 var app = express();
 var DButilsAzure = require('./DButils');
 var parse = require("body-parser");
+var jwt =require("jsonwebtoken");
 
 var port = 3000;
 app.listen(port, function () {
     console.log('Example app listening on port ' + port);
 });
 app.use(parse.urlencoded({ extended: true }));
+secret="thisIsHell"
 
-
-app.post('/Register', function(req, res){
-    var username=req.body.username;
-    var fname=req.body.first_name;
-    var lname=req.body.last_name;
-    var city=req.body.city;
-    var country=req.body.country;
-    var email=req.body.email;
-    var question=req.body.question;
-    var answer=req.body.answer;
-    var password=req.body.password;
-    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, question,answer) VALUES (\'"+username+"\',\'"+fname+"\',\'"+lname+"\',\'"+city+"\',\'"+country+"\',\'"+email+"\',\'"+question+"\',\'"+answer+"\')")
-    DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES (\'"+username+"\',\'"+password+"\')")
-    .then(function(result){     
-        res.send(true)
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
+app.post('/Register', function (req, res) {
+    var username = req.body.username;
+    var fname = req.body.first_name;
+    var lname = req.body.last_name;
+    var city = req.body.city;
+    var country = req.body.country;
+    var email = req.body.email;
+    var question = req.body.question;
+    var answer = req.body.answer;
+    var password = req.body.password;
+    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email, question,answer) VALUES (\'" + username + "\',\'" + fname + "\',\'" + lname + "\',\'" + city + "\',\'" + country + "\',\'" + email + "\',\'" + question + "\',\'" + answer + "\')")
+    DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES (\'" + username + "\',\'" + password + "\')")
+        .then(function (result) {
+            res.send(true)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(false)
+        })
 })
 
-app.post('/AddPoi', function(req, res){
-    var poiname=req.body.poiname;
-    var rank=parseInt(req.body.rank);
-    var city=req.body.city;
-    var category=req.body.category;
-    var descr=req.body.descr;
-    var views=parseInt(req.body.views);
-    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw) VALUES (\'"+poiname+"\',\'"+rank+"\',\'"+city+"\',\'"+category+"\',\'"+descr+"\',\'"+views+"\')")
-    .then(function(result){     
-        res.send(true)
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
+app.post('/AddPoi', function (req, res) {
+    var poiname = req.body.poiname;
+    var rank = parseInt(req.body.rank);
+    var city = req.body.city;
+    var category = req.body.category;
+    var descr = req.body.descr;
+    var views = parseInt(req.body.views);
+    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw) VALUES (\'" + poiname + "\',\'" + rank + "\',\'" + city + "\',\'" + category + "\',\'" + descr + "\',\'" + views + "\')")
+        .then(function (result) {
+            res.send(true)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(false)
+        })
 })
 
-app.post('/addUserPoi', function(req, res){
-    var username=req.body.username;
-    var poiId=parseInt(req.body.poid);
-    var cnt=parseInt(req.body.cnt);
-     DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('"+username+"','"+poiId+"',getdate(),'"+cnt+"')")
-    .then(function(result){
-        res.send(true)
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
+app.post('/addUserPoi', function (req, res) {
+    var username = req.body.username;
+    var poiId = parseInt(req.body.poid);
+    var cnt = parseInt(req.body.cnt);
+    DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('" + username + "','" + poiId + "',getdate(),'" + cnt + "')")
+        .then(function (result) {
+            res.send(true)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(false)
+        })
 })
 
 
-app.post('/saveReviewPoi', function(req, res){
-    var poiId=parseInt(req.body.poiId);
-    var reviews=req.body.review;
-    DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,wrdate) VALUES ('"+poiId+"','"+reviews+"',getdate())")
-    .then(function(result){
-        res.send(true)
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
+app.post('/saveReviewPoi', function (req, res) {
+    var poiId = parseInt(req.body.poiId);
+    var reviews = req.body.review;
+    DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,wrdate) VALUES ('" + poiId + "','" + reviews + "',getdate())")
+        .then(function (result) {
+            res.send(true)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(false)
+        })
 })
 
-app.delete('/deletePoi', function(req, res){
-    var poiId=parseInt(req.body.poiId);
-    DButilsAzure.execQuery("DELETE FROM Poi WHERE poiId='"+poiId+"'")
-    .then(function(result){
-        res.send(true)
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
+app.delete('/deletePoi', function (req, res) {
+    var poiId = parseInt(req.body.poiId);
+    DButilsAzure.execQuery("DELETE FROM Poi WHERE poiId='" + poiId + "'")
+        .then(function (result) {
+            res.send(true)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(false)
+        })
 })
 
 app.get('/select', function (req, res) {
@@ -98,10 +99,42 @@ app.get('/select', function (req, res) {
             res.send(err)
         })
 })
-
-app.post('/restore', function (req, res) {
+app.use("/private", (req, res,next) =>{
+	const token = req.header("x-auth-token");
+	// no token
+	if (!token){
+        res.status(401).send("Access denied. No token provided.");
+    } 
+	// verify token
+	try {
+		const decoded = jwt.verify(token, secret);
+        req.decoded = decoded;
+        var username=req.decoded.name;
+        req.username=username;
+        DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(true)
+                // res.send(result)
+                next(); //move on to the actual function
+            }
+            else {
+                console.log(notExist)
+                // res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+		
+	} catch (exception) {
+		res.status(400).send("Invalid token.");
+	}
+});
+app.post('/private/restore', function (req, res) {
     var notExist = false;
-    var username = req.body.username;
+    var username = req.username;
     var quastion = req.body.question;
     var answer = req.body.answer;
     DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "' and question= '" + quastion + "' and answer= '" + answer + "'")
@@ -154,10 +187,10 @@ app.get('/retriveConfirmationQuestion', function (req, res) {
 app.get('/getRandomPoi', function (req, res) { //checkkkks
     var notExist = false;
     var username = req.query.username;
-    var minRank=req.query.rank;
-    var quer="SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
-    if(minRank!=null){
-        quer="SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
+    var minRank = req.query.rank;
+    var quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
+    if (minRank != null) {
+        quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
     }
     DButilsAzure.execQuery(quer)
         .then(function (result) {
@@ -198,9 +231,9 @@ app.get('/getRandomPoi', function (req, res) { //checkkkks
         })
 })
 
-app.get('/getSavedPOI', function (req, res) { //return last 2 saved by user
+app.get('/getSavedPOI', function (req, res) { //return last 2 saved by user else returns false
     var notExist = false;
-    var username = req.query.username; 
+    var username = req.query.username;
     DButilsAzure.execQuery("SELECT TOP 2 Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt, addate FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username  = '" + username + "' order by addate DESC")
         .then(function (result) {
             if (result.length > 0) {
@@ -257,12 +290,12 @@ app.get('/getAllPOI', function (req, res) { //return all poi in the db
         })
 })
 
-app.get('/getInterests', function (req, res) {
+app.get('/getAllPOIBN', function (req, res) { //return poi by name
     var notExist = false;
-    var username = req.query.username;
-    DButilsAzure.execQuery("SELECT interest FROM Interests where username  = '" + username + "'")
+    var name = req.query.name;
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi WHERE poiname  = '" + name + "'")
         .then(function (result) {
-            if (result.length != null) {
+            if (result.length > 0) {
                 console.log(result)
                 res.send(result)
             }
@@ -276,4 +309,57 @@ app.get('/getInterests', function (req, res) {
             res.send(err)
         })
 })
+
+app.get('/getInterests', function (req, res) {
+    var notExist = false;
+    var username = req.query.username;
+    DButilsAzure.execQuery("SELECT interest FROM Interests where username  = '" + username + "'")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/getReviewPOI', function (req, res) { //return 2 most recent reviews of specific poi
+    var notExist = false;
+    var poiId = req.query.poiId;
+    DButilsAzure.execQuery("SELECT TOP 2 review FROM reviewPoi where poiId  = '" + poiId + "' order by wrdate DESC")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+
+
+app.post("/login", (req, res) => {
+    var username=req.body.username;
+    var password=req.body.password;
+    payload = { name: username, password: password };
+	options = { expiresIn: "1d" };
+	const token = jwt.sign(payload, secret, options);
+	res.send(token);
+});
+
+
 
