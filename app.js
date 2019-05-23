@@ -3,6 +3,26 @@ var app = express();
 var DButilsAzure = require('./DButils');
 var parse = require("body-parser");
 var jwt = require("jsonwebtoken");
+var countries;
+
+var fs = require('fs');
+var parser = require('xml2json');
+
+fs.readFile( './countries.xml', function(err, data) {
+    countries = JSON.parse(parser.toJson(data));
+    console.log(countries)
+});
+
+function validateCountry(country){
+    for(var i=0; i<countries.Countries.Country.length; i++){
+        if(countries.Countries.Country[i].Name==country){
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 var port = 3000;
 app.listen(port, function () {
@@ -327,6 +347,89 @@ app.get('/private/getAllPOIBu', function (req, res) { //return all poi by user (
 app.get('/getAllPOI', function (req, res) { //return all poi in the db
     var notExist = false;
     DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/getAllPOIRnk', function (req, res) { //return all poi in the db orderd by rank
+    var notExist = false;
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi order by rnk")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/getAllPOIBCat', function (req, res) { //return all poi by category
+    var notExist = false;
+    var category = req.body.category;
+    if (!onlyString(category)) {
+        res.send("Category should be only string")
+    } else {
+        DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where category='" + category + "' ")
+            .then(function (result) {
+                if (result.length > 0) {
+                    console.log(result)
+                    res.send(result)
+                }
+                else {
+                    console.log(notExist)
+                    res.send(notExist)
+                }
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(err)
+            })
+    }
+})
+
+app.get('/private/getAllPOIOCat', function (req, res) { //return all poi by user orderd by category
+    var notExist = false;
+    var username = req.username;
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username = '" + username + "'order by category ")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(result)
+                res.send(result)
+            }
+            else {
+                console.log(notExist)
+                res.send(notExist)
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+app.get('/private/getAllPOIORnk', function (req, res) { //return all poi by user orderd by rank
+    var notExist = false;
+    var username = req.username;
+    DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username = '" + username + "'order by rnk ")
         .then(function (result) {
             if (result.length > 0) {
                 console.log(result)
