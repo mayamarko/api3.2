@@ -37,7 +37,7 @@ Create table Passwd (	username varchar(50) not null primary key,
 
 Create table Poi (		poiId int not null IDENTITY(1,1) primary key,
 						poiname varchar(max) not null ,
-						rnk float ,
+						rnk float not null,
 						city varchar(max) not null,
 						category varchar(max) not null,
 						descr varchar(max),

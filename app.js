@@ -59,122 +59,169 @@ app.post('/Register', function (req, res) {
     var answer2 = req.body.answer2;
     var password = req.body.password;
     var interestString = req.body.interests;
-    var validate=validateInsertion(username, fname, lname, city, country, email, password);
-    DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email,question1,answer1,question2,answer2) VALUES ('" + username + "','" + fname + "','" + lname + "','" + city + "','" + country + "','" + email + "','" + question1 + "','" + answer1 + "','" + question2 + "','" + answer2 + "')")
-        .then(function (result) {
-            DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES ('" + username + "','" + password + "')")
-                .then(function (result) {
-                    var arr = interestString.split(',');
-                    var i;
-                    for (i = 0; i < arr.length; i++) {
-                        DButilsAzure.execQuery("INSERT INTO Interests (username,interest) VALUES ('" + username + "','" + arr[i] + "')")
-                            .then(function (result) {
-                                res.send(true)
-                            })
-                            .catch(function (err) {
-                                console.log(err)
-                            })
-                    }
-                })
-                .catch(function (err) {
-                    console.log(err)
-                })
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(false)
-        })
+    var arr = interestString.split(',');
+    var validate = validateInsertion(username, fname, lname, city, country, email, password);
+    var validteEmpty = isEmptyUsername(username);
+    if (!validate) {
+        res.send("The given data dosn't match with the database requierment ")
+    }
+    else if (!validteEmpty) {
+        res.send("The given username is already taken")
+    }
+    else if (arr.length < 2) {
+        res.send("The given data dosn't match with the database requierment")
+    }
+    else if (!onlystringArr(arr)) {
+        res.send("Intrests not valid")
+    }
+    else {
+        DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email,question1,answer1,question2,answer2) VALUES ('" + username + "','" + fname + "','" + lname + "','" + city + "','" + country + "','" + email + "','" + question1 + "','" + answer1 + "','" + question2 + "','" + answer2 + "')")
+            .then(function (result) {
+                DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES ('" + username + "','" + password + "')")
+                    .then(function (result) {
+
+                        var i;
+                        for (i = 0; i < arr.length; i++) {
+                            DButilsAzure.execQuery("INSERT INTO Interests (username,interest) VALUES ('" + username + "','" + arr[i] + "')")
+                                .then(function (result) {
+                                    res.send(true)
+                                })
+                                .catch(function (err) {
+                                    console.log(err)
+                                })
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(err)
+                    })
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
 })
 
 
 app.post('/addPoi', function (req, res) { //add poi to poi table
     var poiname = req.body.poiname;
-    //var rank = parseInt(req.body.rank);
     var city = req.body.city;
     var category = req.body.category;
     var descr = req.body.descr;
-    //ar views = parseInt(req.body.views);
     var pic = req.body.picture;
-    DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + null + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','" + 0 + "','" + pic + "')")
-        .then(function (result) {
-            res.send(true)
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(false)
-        })
+    if (!onlyString(category)) {
+        res.send("Category must contain only string")
+    } else {
+        DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + 0 + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','" + 0 + "','" + pic + "')")
+            .then(function (result) {
+                res.send(true)
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
+
 })
 
 app.post('/private/addUserPoi', function (req, res) { //add poi to userPoi
     var username = req.username;
     var poiId = parseInt(req.body.poiId);
     var cnt = parseInt(req.body.cnt);
-    DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('" + username + "','" + poiId + "',getdate(),'" + cnt + "')")
-        .then(function (result) {
-            res.send(true)
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(false)
-        })
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else if (!onlyInt(cnt)) {
+        res.send("poiId must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('" + username + "','" + poiId + "',getdate(),'" + cnt + "')")
+            .then(function (result) {
+                res.send(true)
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
 })
 
 
 app.post('/saveReviewPoi', function (req, res) {
     var poiId = parseInt(req.body.poiId);
     var reviews = req.body.review;
-    DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,wrdate) VALUES ('" + poiId + "','" + reviews + "',getdate())")
-        .then(function (result) {
-            res.send(true)
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(false)
-        })
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("INSERT INTO reviewPoi (poiId,review,wrdate) VALUES ('" + poiId + "','" + reviews + "',getdate())")
+            .then(function (result) {
+                res.send(true)
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
+
 })
 
 app.post('/saveRankPoi', function (req, res) {
     var poiId = parseInt(req.body.poiId);
     var rank = parseInt(req.body.rank);
-    DButilsAzure.execQuery("SELECT rnk,numRank FROM Poi WHERE poiId='" + poiId + "'")
-        .then(function (result) {
-            var calcRank = (result[0].rnk * result[0].numRank + rank) / (result[0].numRank + 1);
-            var addedRank = result[0].numRank + 1;
-            DButilsAzure.execQuery("UPDATE Poi SET rnk = '" + calcRank + "',numRank = '" + addedRank + "' WHERE poiId='" + poiId + "';")
-                .then(function (result1) {
-                    res.send(true)
-                })
-                .catch(function (err) {
-                    console.log(err)
-                    res.send(false)
-                })
-            //res.send(true)
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(false)
-        })
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else if (!onlyInt(rank)) {
+        res.send("rank must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("SELECT rnk,numRank FROM Poi WHERE poiId='" + poiId + "'")
+            .then(function (result) {
+                var calcRank = (result[0].rnk * result[0].numRank + rank) / (result[0].numRank + 1);
+                var addedRank = result[0].numRank + 1;
+                DButilsAzure.execQuery("UPDATE Poi SET rnk = '" + calcRank + "',numRank = '" + addedRank + "' WHERE poiId='" + poiId + "';")
+                    .then(function (result1) {
+                        res.send(true)
+                    })
+                    .catch(function (err) {
+                        console.log(err)
+                        res.send(false)
+                    })
+                //res.send(true)
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
+
 })
 
 app.delete('/private/deleteUserPoi', function (req, res) {
     var username = req.username;
     var poiId = parseInt(req.body.poiId);
-    DButilsAzure.execQuery("DELETE FROM userPoi OUTPUT deleted.* WHERE username='" + username + "' AND poiId='" + poiId + "' ")
-        .then(function (result) {
-            if (result.length > 0) {
-                console.log(result)
-                res.send(true)
-            }
-            else {
-                console.log(false)
-                res.send(false)
-            }
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("DELETE FROM userPoi OUTPUT deleted.* WHERE username='" + username + "' AND poiId='" + poiId + "' ")
+            .then(function (result) {
+                if (result.length > 0) {
+                    console.log(result)
+                    res.send(true)
+                }
+                else {
+                    console.log(false)
+                    res.send(false)
+                }
 
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(err)
-        })
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(err)
+            })
+    }
 })
 
 app.post('/restore', function (req, res) {
@@ -468,67 +515,120 @@ app.get('/private/getPOIbyInterests', function (req, res) {
         })
 })
 
-app.post('/editViews', function(req, res){
-    var poiId=parseInt(req.body.poiId);
-    DButilsAzure.execQuery("SELECT poiId,viw FROM Poi WHERE poiId='"+poiId+"'")
-    .then(function(result){         
-        var addView=result[0].viw+1;
-        DButilsAzure.execQuery("UPDATE Poi SET viw = '"+addView+"' WHERE poiId='"+poiId+"';")
-        .then(function(result){
-            res.send(true)
-        })
-        .catch(function(err){
-            console.log(err)
-            res.send(false)
-        }) 
-    })
-    .catch(function(err){
-        console.log(err)
-        res.send(false)
-    })
-})
-
-function isEmptyUsername(username){ //how to make it synchronic?
-    DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
+app.post('/editViews', function (req, res) {
+    var poiId = parseInt(req.body.poiId);
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("SELECT poiId,viw FROM Poi WHERE poiId='" + poiId + "'")
             .then(function (result) {
-                if (result.length > 0) {
-                    console.log(false)
-                    return false;
-                }
-                else {
-                    console.log(true)
-                    return true;
-                }
-                
+                var addView = result[0].viw + 1;
+                DButilsAzure.execQuery("UPDATE Poi SET viw = '" + addView + "' WHERE poiId='" + poiId + "';")
+                    .then(function (result) {
+                        res.send(true)
+                    })
+                    .catch(function (err) {
+                        console.log(err)
+                        res.send(false)
+                    })
             })
             .catch(function (err) {
                 console.log(err)
-                // res.send(err)
+                res.send(false)
             })
+    }
+
+})
+
+app.post('/private/editRank', function (req, res) {
+    var username = req.username;
+    var poiId = parseInt(req.body.poiId);
+    var indexPoi = parseInt(req.body.indexPoi);
+    if (!onlyInt(poiId)) {
+        res.send("poiId must be numeric")
+    }
+    else if (!onlyInt(indexPoi)) {
+        res.send("index must be numeric")
+    }
+    else {
+        DButilsAzure.execQuery("UPDATE userPoi SET cnt = '" + indexPoi + "' WHERE poiId='" + poiId + "' AND username='" + username + "'")
+            .then(function (result) {
+                res.send(true)
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(false)
+            })
+    }
+})
+
+
+app.get('/private/getUserPoiNum', function (req, res) { //counts number of saved poi for user
+    var username = req.username;
+    DButilsAzure.execQuery("SELECT COUNT(*) FROM userPoi where username  = '" + username + "'")
+        .then(function (result) {
+            res.send(result)
+        })
+        .catch(function (err) {
+            console.log(err)
+            res.send(err)
+        })
+})
+
+
+
+function isEmptyUsername(username) { //how to make it synchronic?
+    DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
+        .then(function (result) {
+            if (result.length > 0) {
+                console.log(false)
+                return false;
+            }
+            else {
+                console.log(true)
+                return true;
+            }
+
+        })
+        .catch(function (err) {
+            console.log(err)
+            // res.send(err)
+        })
 
 }
 
-function isValidUsername(username){
+function isValidUsername(username) {
     return /^[a-zA-Z]+{3,8}$/.test(username);
 }
 
-function onlyString(word){
+function onlyString(word) {
     return /^[a-zA-Z]+$/.test(word)
 }
 
-function isEmail(email){ 
-    return /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/.test(email) 
+function isEmail(email) {
+    return /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/.test(email)
 }
 
-function onlyInt(num){
+function onlyInt(num) {
     return /^[+-]?\d+(\.\d+)?$/.test(num)
 }
 
-function isValidPassword(username){
+function isValidPassword(username) {
     return /^[a-zA-Z0-9]{5,10}$/.test(username)
 }
 
 function validateInsertion(username, fname, lname, city, country, email, password) {
-    return isEmptyUsername(username) && isValidUsername(username) && onlyString(fname) && onlyString(lname) && onlyString(city) && onlyString(country) && isEmail(email) && isValidPassword(password)
-} 
+    return isValidUsername(username) && onlyString(fname) && onlyString(lname) && onlyString(city) && onlyString(country) && isEmail(email) && isValidPassword(password)
+}
 
+function onlystringArr(arr) {
+    var ans = true;
+    var i;
+    for (i = 0; i < arr.length; i++) {
+        if (!onlyString(arr[i])) {
+            ans = false
+        }
+    }
+    return ans
+} 
