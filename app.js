@@ -3,9 +3,6 @@ var app = express();
 var DButilsAzure = require('./DButils');
 var parse = require("body-parser");
 var jwt = require("jsonwebtoken");
-var validator = require('./validator');
-
-console.log(validator.isValidPassword("5456d"));
 
 var port = 3000;
 app.listen(port, function () {
@@ -239,47 +236,52 @@ app.get('/retriveConfirmationQuestion', function (req, res) {
 app.get('/getRandomPoi', function (req, res) {
     var notExist = false;
     var minRank = req.body.rank;
-    var quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
-    if (minRank != null) {
-        quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
+    if (!onlyInt(minRank)) {
+        res.send("Only numbers as rank!")
     }
-    DButilsAzure.execQuery(quer)
-        .then(function (result) {
-            var len = result.length;
-            var rand = Math.floor(Math.random() * (len));
-            var rand1 = Math.floor(Math.random() * (len));
-            var rand2 = Math.floor(Math.random() * (len));
-            if (result.length > 0) {
-                var ret;
-                if (len > 2) {
-                    while (rand1 === rand || rand === rand2 || rand1 === rand2) {
-                        rand = Math.floor(Math.random() * (len));
-                        rand1 = Math.floor(Math.random() * (len));
-                        rand2 = Math.floor(Math.random() * (len));
+    else {
+        var quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi";
+        if (minRank != null) {
+            quer = "SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi where rnk  >= '" + minRank + "'";
+        }
+        DButilsAzure.execQuery(quer)
+            .then(function (result) {
+                var len = result.length;
+                var rand = Math.floor(Math.random() * (len));
+                var rand1 = Math.floor(Math.random() * (len));
+                var rand2 = Math.floor(Math.random() * (len));
+                if (result.length > 0) {
+                    var ret;
+                    if (len > 2) {
+                        while (rand1 === rand || rand === rand2 || rand1 === rand2) {
+                            rand = Math.floor(Math.random() * (len));
+                            rand1 = Math.floor(Math.random() * (len));
+                            rand2 = Math.floor(Math.random() * (len));
+                        }
+                        ret = [result[rand], result[rand1], result[rand2]];
                     }
-                    ret = [result[rand], result[rand1], result[rand2]];
-                }
-                else if (len == 2) {
-                    while (rand1 === rand) {
-                        rand = Math.floor(Math.random() * (len));
-                        rand1 = Math.floor(Math.random() * (len));
+                    else if (len == 2) {
+                        while (rand1 === rand) {
+                            rand = Math.floor(Math.random() * (len));
+                            rand1 = Math.floor(Math.random() * (len));
+                        }
+                        ret = [result[rand], result[rand1]];
+                    } else {
+                        ret = [result[0]];
                     }
-                    ret = [result[rand], result[rand1]];
-                } else {
-                    ret = [result[0]];
+                    console.log(ret)
+                    res.send(ret)
                 }
-                console.log(ret)
-                res.send(ret)
-            }
-            else {
-                console.log(notExist)
-                res.send(notExist)
-            }
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(err)
-        })
+                else {
+                    console.log(notExist)
+                    res.send(notExist)
+                }
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(err)
+            })
+    }
 })
 
 app.get('/private/getSavedPOI', function (req, res) { //return last 2 saved by user else returns false
@@ -384,21 +386,25 @@ app.get('/private/getInterests', function (req, res) {
 app.get('/getReviewPOI', function (req, res) { //return 2 most recent reviews of specific poi
     var notExist = false;
     var poiId = req.body.poiId;
-    DButilsAzure.execQuery("SELECT TOP 2 review FROM reviewPoi where poiId  = '" + poiId + "' order by wrdate DESC")
-        .then(function (result) {
-            if (result.length > 0) {
-                console.log(result)
-                res.send(result)
-            }
-            else {
-                console.log(notExist)
-                res.send(notExist)
-            }
-        })
-        .catch(function (err) {
-            console.log(err)
-            res.send(err)
-        })
+    if (!onlyInt(poiId)) {
+        res.send("Only int as poiId")
+    } else {
+        DButilsAzure.execQuery("SELECT TOP 2 review FROM reviewPoi where poiId  = '" + poiId + "' order by wrdate DESC")
+            .then(function (result) {
+                if (result.length > 0) {
+                    console.log(result)
+                    res.send(result)
+                }
+                else {
+                    console.log(notExist)
+                    res.send(notExist)
+                }
+            })
+            .catch(function (err) {
+                console.log(err)
+                res.send(err)
+            })
+    }
 })
 
 
@@ -515,7 +521,7 @@ function isEmail(email){
 }
 
 function onlyInt(num){
-    return /^[0-9]+$/.test(num)
+    return /^[+-]?\d+(\.\d+)?$/.test(num)
 }
 
 function isValidPassword(username){
