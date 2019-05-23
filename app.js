@@ -62,6 +62,7 @@ app.post('/Register', function (req, res) {
     var answer2 = req.body.answer2;
     var password = req.body.password;
     var interestString = req.body.interests;
+    var validate=validateInsertion(username, fname, lname, city, country, email, password);
     DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email,question1,answer1,question2,answer2) VALUES ('" + username + "','" + fname + "','" + lname + "','" + city + "','" + country + "','" + email + "','" + question1 + "','" + answer1 + "','" + question2 + "','" + answer2 + "')")
         .then(function (result) {
             DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES ('" + username + "','" + password + "')")
@@ -481,5 +482,47 @@ app.post('/editViews', function(req, res){
     })
 })
 
+function isEmptyUsername(username){ //how to make it synchronic?
+    DButilsAzure.execQuery("SELECT username FROM Users where username  = '" + username + "'")
+            .then(function (result) {
+                if (result.length > 0) {
+                    console.log(false)
+                    return false;
+                }
+                else {
+                    console.log(true)
+                    return true;
+                }
+                
+            })
+            .catch(function (err) {
+                console.log(err)
+                // res.send(err)
+            })
 
+}
+
+function isValidUsername(username){
+    return /^[a-zA-Z]+{3,8}$/.test(username);
+}
+
+function onlyString(word){
+    return /^[a-zA-Z]+$/.test(word)
+}
+
+function isEmail(email){ 
+    return /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/.test(email) 
+}
+
+function onlyInt(num){
+    return /^[0-9]+$/.test(num)
+}
+
+function isValidPassword(username){
+    return /^[a-zA-Z0-9]{5,10}$/.test(username)
+}
+
+function validateInsertion(username, fname, lname, city, country, email, password) {
+    return isEmptyUsername(username) && isValidUsername(username) && onlyString(fname) && onlyString(lname) && onlyString(city) && onlyString(country) && isEmail(email) && isValidPassword(password)
+} 
 

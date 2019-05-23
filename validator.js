@@ -34,3 +34,7 @@ exports.onlyInt=function(num){
 exports.isValidPassword=function(username){
     return /^[a-zA-Z0-9]{5,10}$/.test(username)
 }
+
+exports.validateInsertion = function (username, fname, lname, city, country, email, password) {
+    return  onlyString(fname) && onlyString(lname) && onlyString(city) && onlyString(country) && isEmail(email) && isValidPassword(password)
+}
