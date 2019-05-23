@@ -2,7 +2,7 @@ INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		
 VALUES			  ('mam',	    'Ma',		    'Mark',		    'Carmi',	'Israel',	'maya@gh.com',	'is it 1',	    'yep1',		'is it it 1',	'yepyep1'  )
 
 INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question1,		answer1,	question2,	answer2) 
-VALUES			  ('noft',	    'Nof',		    'Turtel',	'Hod- Ha',	 'Israel',	'nof@gh.com',	'is it 2',	'yep2',			'is it it 2',	'yepyep2')
+VALUES			  ('nof',	    'Nof',		    'Turtel',	'Hod- Ha',	 'Israel',	'nof@gh.com',	'is it 2',	'yep2',			'is it it 2',	'yepyep2')
 
 INSERT INTO Users (username ,	first_name ,	last_name,		city,		country,		email,		question1,		answer1 ,	question2,	answer2) 
 VALUES			  ('adj',	    'Ad',		    'Jac',	    'Natanya',      'Israel',	'ati@gh.com',	'is it 3',	'yep3',			'is it it 3',	'yepyep3')

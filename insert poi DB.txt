@@ -33,13 +33,13 @@ VALUES				('vlaams Frietesuhuis vlemninckx',	4,	'Amsterdam',	'Eatings',		'Quick 
 
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Amsterdam Canal Cruises',		1,		'Amsterdam',	'Tours',    'Boat tour in Amsterdam's Canals',	                    3,			1	)
+VALUES				('Amsterdam Canal Cruises',		1,		'Amsterdam',	'Tours',    'Boat tour in Amsterdams Canals',	                    3,			1	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										 viw,		numRank) 
 VALUES				('Free Walking Tours Amsterdam',2,		'Amsterdam',	'Tours',    'Get to know Amsterdam better by walking throuh the Streets and Neighberhoods',2,1)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
-VALUES				('Heineken Experience',			5,		'Amsterdam',	'Tours',		'Tour in Netherland's signeture brewery',		    4,			3	)
+VALUES				('Heineken Experience',			5,		'Amsterdam',	'Tours',		'Tour in Netherlands signeture brewery',		    4,			3	)
 
 INSERT INTO Poi		(poiname,						rnk,		city,		category,				descr,										  viw,		numRank) 
 VALUES				('Amsterdam Light Festival',	3,		'Amsterdam',	'Tours',	'Light Festival in the Streets and Canals of Amsterdam',4,			3	)
