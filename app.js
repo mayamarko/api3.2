@@ -10,7 +10,6 @@ var parser = require('xml2json');
 
 fs.readFile( './countries.xml', function(err, data) {
     countries = JSON.parse(parser.toJson(data));
-    console.log(countries)
 });
 
 function validateCountry(country){
@@ -81,13 +80,13 @@ app.post('/Register', function (req, res) {
     var interestString = req.body.interests;
     var arr = interestString.split(',');
     var validate = validateInsertion(username, fname, lname, city, country, email, password);
-    var validteEmpty = isEmptyUsername(username);
+    // var validteEmpty = isEmptyUsername(username);
     if (!validate) {
         res.send("The given data dosn't match with the database requierment ")
     }
-    else if (!validteEmpty) {
-        res.send("The given username is already taken")
-    }
+    // else if (!validteEmpty) {
+    //     res.send("The given username is already taken")
+    // }
     else if (arr.length < 2) {
         res.send("The given data dosn't match with the database requierment")
     }
@@ -702,11 +701,11 @@ function isEmptyUsername(username) { //how to make it synchronic?
 }
 
 function isValidUsername(username) {
-    return /^[a-zA-Z]+{3,8}$/.test(username);
+    return /^[a-zA-Z]{3,8}$/.test(username);
 }
 
 function onlyString(word) {
-    return /^[a-zA-Z]+$/.test(word)
+    return /^[a-zA-Z\s-]+$/.test(word)
 }
 
 function isEmail(email) {
@@ -722,7 +721,14 @@ function isValidPassword(username) {
 }
 
 function validateInsertion(username, fname, lname, city, country, email, password) {
-    return isValidUsername(username) && onlyString(fname) && onlyString(lname) && onlyString(city) && onlyString(country) && isEmail(email) && isValidPassword(password)
+    var a=isValidUsername(username);
+    var b=onlyString(fname);
+    var c=onlyString(lname);
+    var d= onlyString(city);
+    var e=onlyString(country);
+    var f=isEmail(email);
+    var h=isValidPassword(password);
+    return a&&b&&c&&d&&e&&f&&h;
 }
 
 function onlystringArr(arr) {
