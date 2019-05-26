@@ -187,7 +187,7 @@ app.post('/saveReviewPoi', function (req, res) {
 
 app.post('/saveRankPoi', function (req, res) {
     var poiId = parseInt(req.body.poiId);
-    var rank = parseInt(req.body.rank);
+    var rank = parseFloat(req.body.rank);
     if (!onlyInt(poiId)) {
         res.send("poiId must be numeric")
     }
@@ -452,7 +452,7 @@ app.get('/getAllPOIBCat', function (req, res) { //return all poi by category
     }
 })
 
-app.get('/private/getAllPOIOCat', function (req, res) { //return all poi by user orderd by category
+app.get('/private/getAllPOIOCat', function (req, res) { //return all poi favorite of user orderd by category
     var notExist = false;
     var username = req.username;
     DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture, cnt FROM userPoi RIGHT JOIN Poi on userPoi.poiId=Poi.poiId where username = '" + username + "'order by category ")
@@ -668,7 +668,7 @@ app.post('/private/editRank', function (req, res) {
 
 app.get('/private/getUserPoiNum', function (req, res) { //counts number of saved poi for user
     var username = req.username;
-    DButilsAzure.execQuery("SELECT COUNT(*) FROM userPoi where username  = '" + username + "'")
+    DButilsAzure.execQuery("SELECT COUNT(*) as NumberofPOI FROM userPoi where username  = '" + username + "'")
         .then(function (result) {
             res.send(result)
         })
