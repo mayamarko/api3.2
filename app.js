@@ -14,7 +14,7 @@ fs.readFile( './countries.xml', function(err, data) {
 
 function validateCountry(country){
     for(var i=0; i<countries.Countries.Country.length; i++){
-        if(countries.Countries.Country[i].Name==country){
+        if(countries.Countries.Country[i].Name.toUpperCase()==country.toUpperCase()){
             return true;
         }
     }
@@ -80,25 +80,23 @@ app.post('/Register', function (req, res) {
     var interestString = req.body.interests;
     var arr = interestString.split(',');
     var validate = validateInsertion(username, fname, lname, city, country, email, password);
-    // var validteEmpty = isEmptyUsername(username);
     if (!validate) {
-        res.send("The given data dosn't match with the database requierment ")
-    }
-    // else if (!validteEmpty) {
-    //     res.send("The given username is already taken")
-    // }
-    else if (arr.length < 2) {
         res.send("The given data dosn't match with the database requierment")
+    }
+    else if (arr.length < 2) {
+        res.send("There must be two or more intrests")
     }
     else if (!onlystringArr(arr)) {
         res.send("Intrests not valid")
+    }
+    else if(!validateCountry(country)){
+        res.send("country is unknown to the system")
     }
     else {
         DButilsAzure.execQuery("INSERT INTO Users (username,first_name,last_name,city,country,email,question1,answer1,question2,answer2) VALUES ('" + username + "','" + fname + "','" + lname + "','" + city + "','" + country + "','" + email + "','" + question1 + "','" + answer1 + "','" + question2 + "','" + answer2 + "')")
             .then(function (result) {
                 DButilsAzure.execQuery("INSERT INTO Passwd (username,passwd) VALUES ('" + username + "','" + password + "')")
                     .then(function (result) {
-
                         var i;
                         for (i = 0; i < arr.length; i++) {
                             DButilsAzure.execQuery("INSERT INTO Interests (username,interest) VALUES ('" + username + "','" + arr[i] + "')")
@@ -116,7 +114,7 @@ app.post('/Register', function (req, res) {
             })
             .catch(function (err) {
                 console.log(err)
-                res.send(false)
+                res.send("The given information is invalid to the server")
             })
     }
 })
@@ -130,7 +128,10 @@ app.post('/addPoi', function (req, res) { //add poi to poi table
     var pic = req.body.picture;
     if (!onlyString(category)) {
         res.send("Category must contain only string")
-    } else {
+    }else if(!onlyString(city)){
+        res.send("City must contain only string")
+    } 
+    else {
         DButilsAzure.execQuery("INSERT INTO Poi (poiname,rnk,city,category,descr,viw,numRank,picture) VALUES ('" + poiname + "','" + 0 + "','" + city + "','" + category + "','" + descr + "','" + 0 + "','" + 0 + "','" + pic + "')")
             .then(function (result) {
                 res.send(true)
@@ -151,7 +152,7 @@ app.post('/private/addUserPoi', function (req, res) { //add poi to userPoi
         res.send("poiId must be numeric")
     }
     else if (!onlyInt(cnt)) {
-        res.send("poiId must be numeric")
+        res.send("rank must be numeric")
     }
     else {
         DButilsAzure.execQuery("INSERT INTO userPoi (username,poiId,addate,cnt) VALUES ('" + username + "','" + poiId + "',getdate(),'" + cnt + "')")
@@ -302,7 +303,7 @@ app.get('/retriveConfirmationQuestion', function (req, res) {
 app.get('/getRandomPoi', function (req, res) {
     var notExist = false;
     var minRank = req.body.rank;
-    if (!onlyInt(minRank)) {
+    if (minRank!=null && !onlyInt(minRank)) {
         res.send("Only numbers as rank!")
     }
     else {
