@@ -3,6 +3,7 @@ var app = express();
 var DButilsAzure = require('./DButils');
 var parse = require("body-parser");
 var jwt = require("jsonwebtoken");
+var cors=require("cors");
 var countries;
 
 var fs = require('fs');
@@ -27,9 +28,19 @@ var port = 3000;
 app.listen(port, function () {
     console.log('Example app listening on port ' + port);
 });
+app.use(cors())
+app.options('*',cors());
 app.use(parse.json())
 app.use(parse.urlencoded({ extended: true }));
 secret = "thisIsHell"
+
+app.use(function(req,res,next){
+    req.header("Access-Control-Allow-Origin","*");
+    req.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.use("/private", (req, res, next) => {
     const token = req.header("x-auth-token");
@@ -495,7 +506,7 @@ app.get('/private/getAllPOIORnk', function (req, res) { //return all poi by user
 
 app.get('/getAllPOIBN', function (req, res) { //return poi by name
     var notExist = false;
-    var name = req.body.name;
+    var name = req.query.name;
     DButilsAzure.execQuery("SELECT Poi.poiId, poiname, rnk, city, category, descr, viw, picture FROM Poi WHERE poiname  = '" + name + "'")
         .then(function (result) {
             if (result.length > 0) {
