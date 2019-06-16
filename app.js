@@ -442,7 +442,7 @@ app.get('/getAllPOIRnk', function (req, res) { //return all poi in the db orderd
 
 app.get('/getAllPOIBCat', function (req, res) { //return all poi by category
     var notExist = false;
-    var category = req.body.category;
+    var category = req.query.category;
     if (!onlyString(category)) {
         res.send("Category should be only string")
     } else {
