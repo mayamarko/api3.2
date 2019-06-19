@@ -231,7 +231,7 @@ app.post('/saveRankPoi', function (req, res) {
 
 app.delete('/private/deleteUserPoi', function (req, res) {
     var username = req.username;
-    var poiId = parseInt(req.body.poiId);
+    var poiId = parseInt(req.query.poiId);
     if (!onlyInt(poiId)) {
         res.send("poiId must be numeric")
     }
