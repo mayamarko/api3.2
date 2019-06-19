@@ -546,7 +546,7 @@ app.get('/private/getInterests', function (req, res) {
 
 app.get('/getReviewPOI', function (req, res) { //return 2 most recent reviews of specific poi
     var notExist = false;
-    var poiId = req.body.poiId;
+    var poiId = req.query.poiId;
     if (!onlyInt(poiId)) {
         res.send("Only int as poiId")
     } else {
