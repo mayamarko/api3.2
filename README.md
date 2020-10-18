@@ -8,7 +8,7 @@ In this project we played different roles in three different parts:
 - Frontend programmer - can be found in: https://github.com/mayamarko/Amsterdam
 
 
-- The final API document attached client side repository.
+* The final API document attached client side repository.
 
 *Both of the sides needs to run in order to start using this website.
 
