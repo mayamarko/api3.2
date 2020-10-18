@@ -1,6 +1,3 @@
-//this is only an example, handling everything is yours responsibilty !
-//this is an example - open and close the connection in each request
-
 var ConnectionPool = require('tedious-connection-pool');
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
